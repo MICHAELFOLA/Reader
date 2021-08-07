@@ -7,7 +7,7 @@ app_name = 'scrapper'
 urlpatterns = [
 
     
-    path('search/', views.webcrawl_input, name='search'),
+    path("", views.webcrawl_input, name='search'),
     path('result/', add, name='result'),
 
 
