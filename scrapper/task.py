@@ -3,6 +3,13 @@ from selenium import webdriver
 from django.http import JsonResponse
 from django.views.generic import ListView
 from selenium.webdriver.common.by import By
+import os
+chrome_options = webdriver.ChromeOptions()
+chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+chrome_options.add_argument("--heaadless")
+chrome_options.add_argument("--disable-dev-shm-usage")
+chrome_options.add_argument("--no-sandbox")
+driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
 import chromedriver_binary  # Adds chromedriver binary to path
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import ActionChains
