@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
-#from selenium import webdriver
+from selenium import webdriver
 from django.http import JsonResponse
 from django.views.generic import ListView
-import time
-from webbot import Browser
-import time
+from selenium.webdriver.common.by import By
+import chromedriver_binary  # Adds chromedriver binary to path
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver import ActionChains
+from time import sleep
 import pandas as DataFrame
 from bs4 import BeautifulSoup as soup
 import csv
@@ -14,38 +16,30 @@ import string
 def add(request):
 
     website = "https://www.readworks.org/"
-    heading =  request.session.get('header')
+    article_url =  request.session.get('url')
     subheading =  request.session.get('sub')
     n =  request.session.get('char')
 
 
-    def crawler(website, heading,subheading):
-        web = Browser()
-        # web.go_to(website)
-        # web = webdriver.Chrome()
-        web.get(website)
-        web.click("Close")
-        web.click("Log In")
-        web.type('xroydacute@yahoo.com', into='Email')
-        web.click('NEXT', tag='span')
-        web.type('python', into='Password', id='passwordFieldId')
-        web.click("Close")
-        web.click('NEXT', tag='span')
-        web.click("Log In")
-        web.click("Close")
-        web.click("Find Content")
-        web.click("Close")
-        web.click(heading)
-        time.sleep(3)
-        web.click(subheading)
+    def crawler():
+        driver = webdriver.Chrome()
+        driver.get(website)
+        driver.find_element_by_class_name("log-in-button").click()
+        driver.find_element_by_name("email").send_keys("xroydacute@yahoo.com")
+        driver.find_element_by_name("password").send_keys("python")
+        driver.find_element_by_class_name("submit").click()
+    #     sleep(1)
+    #     driver.get("https://www.readworks.org/find-content")
+        sleep(5)
+        
+        driver.get(article_url)
 
-        time.sleep(3)
-
-        url = web.get_page_source()
+        sleep(2)
+        url = driver.page_source
         return url
 
 
-    url = crawler(website, heading, subheading)
+    url = crawler()
     soup1 = soup(url, 'html.parser')
 
 
